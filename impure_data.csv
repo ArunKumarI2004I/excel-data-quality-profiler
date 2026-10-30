@@ -1,0 +1,21 @@
+Customer_ID,Name,Age,Gender,City,Email,Purchase_Amount,Purchase_Date,Product_Category
+101,Arun Kumar,22,Male,Chennai,arun@gmail.com,2500,2026-01-15,Electronics
+102,Priya Sharma,24,Female,Mumbai,priya@gmail.com,1800,15/01/2026,Clothing
+103,Rahul Verma,NULL,Male,Delhi,rahul@gmail.com,3200,2026-01-17,Electronics
+104, Sneha Reddy ,23,Female,Hyderabad,sneha@gmail.com,1500,2026-01-18,Clothing
+105,Amit Patel,25,M,Ahmedabad,amit@gmail.com,2100,2026-01-19,electronics
+106,Neha Singh,27,Female,Bangalore,neha.gmail.com,2700,2026-01-20,Beauty
+107,Karan Mehta,200,Male,Pune,karan@gmail.com,3500,2026-01-21,Electronics
+108,Divya Nair,26,Female,Chennai,NULL,1900,2026-01-22,Clothing
+109,Rohit Das,24,Male,Kolkata,rohit@gmail.com,-500,2026-01-23,Food
+110,Pooja Shah,23,Female,Mumbai,pooja@gmail.com,2200,2026-01-24,Beauty
+111,Arun Kumar,22,Male,Chennai,arun@gmail.com,2500,2026-01-15,Electronics
+112,Vikram Rao,29,Male,Chennai,vikram@gmail.com,2800,2026-01-26,Electronic
+113,Meera Iyer,21,Female,Chennai,meera@gmail.com,,2026-01-27,Clothing
+114,John Mathew,30,Male,Kochi,john@gmail.com,4000,2026-01-28,Food
+115,Ananya Bose,22,Female,Kolkata,ananya@gmail.com,150000,2026-01-29,Beauty
+116,Raj Kumar,25,Male,Delhi,raj@gmail.com,2300,2026-01-30,Clothing
+117,Sanjay Kumar,28,Male,Chennai,sanjay@gmail.com,2600,30-01-2026,Electronics
+118,Kavya Menon,24,Female,Bangalore,kavya@gmail.com,3100,2026-01-31,BEAUTY
+119,Manoj Gupta,26,Male,Delhi,manoj@gmail.com,1800,2026-02-01,Food
+120,Anjali Rao,23,Female,Hyderabad,anjali@gmail.com,2000,2026-02-02,Clothing
