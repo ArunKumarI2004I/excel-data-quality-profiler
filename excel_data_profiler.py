@@ -1,10 +1,11 @@
 """
-Excel Data Quality Profiler
----------------------------
-Profiles every worksheet in an Excel workbook and writes a separate report.
+Excel and CSV Data Quality Profiler
+-----------------------------------
+Profiles every worksheet in an Excel workbook or a single CSV file and
+writes a separate Excel report.
 
 Features
-- Multi-sheet workbook profiling
+- Multi-sheet Excel workbook and single-table CSV profiling
 - Blank/whitespace missing-value detection
 - Full-row duplicate detection
 - Configurable business-key duplicate checks
@@ -15,7 +16,8 @@ Features
 Usage:
     python excel_data_profiler.py
     python excel_data_profiler.py "path/to/workbook.xlsx"
-    python excel_data_profiler.py "path/to/workbook.xlsx" --output-dir "profiling_output"
+    python excel_data_profiler.py "path/to/data.csv"
+    python excel_data_profiler.py "path/to/data.csv" --output-dir "profiling_output"
 
 Optional configuration:
     Edit BUSINESS_KEY_COLUMNS below to define business keys by sheet.
@@ -38,17 +40,17 @@ import pandas as pd
 # }
 BUSINESS_KEY_COLUMNS: dict[str, list[str]] = {}
 
-EXCEL_EXTENSIONS = {".xlsx", ".xls", ".xlsm"}
+EXCEL_EXTENSIONS = {".xlsx", ".xls", ".xlsm", ".csv"}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Profile data quality across all sheets in an Excel workbook."
+        description="Profile data quality in an Excel workbook or CSV file."
     )
     parser.add_argument(
         "workbook",
         nargs="?",
-        help="Path to an Excel workbook. If omitted, a file picker or prompt is used.",
+        help="Path to an Excel workbook or CSV file. If omitted, a file picker or prompt is used.",
     )
     parser.add_argument(
         "--output-dir",
@@ -75,9 +77,9 @@ def choose_workbook(provided_path: str | None) -> Path:
             root = tk.Tk()
             root.withdraw()
             selected = filedialog.askopenfilename(
-                title="Select an Excel workbook to profile",
+                title="Select an Excel workbook or CSV file to profile",
                 filetypes=[
-                    ("Excel workbooks", "*.xlsx *.xls *.xlsm"),
+                    ("Excel and CSV files", "*.xlsx *.xls *.xlsm *.csv"),
                     ("All files", "*.*"),
                 ],
             )
@@ -86,7 +88,7 @@ def choose_workbook(provided_path: str | None) -> Path:
                 raise SystemExit("No workbook selected. Exiting.")
             workbook = Path(selected)
         except (ImportError, ModuleNotFoundError):
-            entered = input("Enter the path to the Excel workbook: ").strip().strip('"')
+            entered = input("Enter the path to the Excel workbook or CSV file: ").strip().strip('"')
             if not entered:
                 raise SystemExit("No workbook path provided. Exiting.")
             workbook = Path(entered)
@@ -154,13 +156,28 @@ def profile_column(
     }
 
 
+def load_input_file(input_path: Path) -> dict[str, pd.DataFrame]:
+    """Load an Excel workbook or CSV file into a sheet-name/DataFrame mapping."""
+    if input_path.suffix.lower() == ".csv":
+        # Keep the same profiling workflow for CSV: treat it as one logical sheet.
+        # utf-8-sig also handles CSV files saved with a UTF-8 BOM (common in Excel).
+        try:
+            df = pd.read_csv(input_path, dtype=object, encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            # Fall back for CSV files exported using a Windows/Excel legacy encoding.
+            df = pd.read_csv(input_path, dtype=object, encoding="cp1252")
+        return {input_path.stem: df}
+
+    # Read values as objects first so mixed columns are not silently coerced to strings.
+    return pd.read_excel(input_path, sheet_name=None, dtype=object)
+
+
 def profile_workbook(
     workbook: Path, output_dir: Path, sample_size: int
 ) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Read values as objects first so mixed columns are not silently coerced to strings.
-    sheets = pd.read_excel(workbook, sheet_name=None)
+    sheets = load_input_file(workbook)
 
     sheet_summary: list[dict[str, Any]] = []
     column_profile: list[dict[str, Any]] = []
@@ -351,7 +368,7 @@ def profile_workbook(
 
     print("\nProfiling complete!")
     print(f"Report saved to: {report_path.resolve()}")
-    print("The source workbook was not modified.")
+    print("The source file was not modified.")
     return report_path
 
 
@@ -359,8 +376,8 @@ def main() -> None:
     args = parse_args()
     if args.sample_size < 1:
         raise ValueError("--sample-size must be at least 1.")
-    workbook = choose_workbook(args.workbook)
-    profile_workbook(workbook, Path(args.output_dir), args.sample_size)
+    input_file = choose_workbook(args.workbook)
+    profile_workbook(input_file, Path(args.output_dir), args.sample_size)
 
 
 if __name__ == "__main__":
