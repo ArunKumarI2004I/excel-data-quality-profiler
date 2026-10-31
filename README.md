@@ -4,15 +4,25 @@ A Python-based tool that analyzes Excel workbooks, identifies common data-qualit
 
 ## Features
 
-- **Multi-sheet profiling** – Analyzes every worksheet in an Excel workbook.
-- **Missing Value Detection** – Identifies empty cells and whitespace-only values.
-- **Duplicate Detection** – Detects duplicate rows across worksheets.
-- **Business Key Validation** – Checks duplicate combinations of configurable business-key columns.
-- **Column Profiling** – Analyzes data types, unique values, missing percentages, and sample values.
-- **Numeric & Date Diagnostics** – Evaluates how successfully column values can be parsed as numbers and dates.
-- **ID Column Analysis** – Identifies duplicate values in columns with ID-like names.
-- **Automated Excel Reports** – Generates a separate Excel workbook containing profiling results.
-- **Source Data Protection** – The original workbook is never modified.
+- **Multi-Sheet Workbook Profiling** – Automatically analyzes every worksheet in an Excel workbook and generates individual data quality metrics.
+
+- **Missing Value Detection** – Identifies empty cells, null values, and whitespace-only entries, helping reveal incomplete datasets.
+
+- **Duplicate Row Detection** – Detects duplicate records within each worksheet to highlight repeated data.
+
+- **Business Key Validation** – Checks configured business key columns for duplicate combinations that could indicate data integrity issues.
+
+- **Column-Level Profiling** – Provides insights into each column, including data types, missing values, unique values, and completeness percentages.
+
+- **Numeric Data Analysis** – Evaluates numeric columns and identifies values that cannot be successfully interpreted as numbers.
+
+- **Date Validation** – Examines date-like columns and identifies values that cannot be parsed as valid dates.
+
+- **Identifier Analysis** – Profiles ID-like columns and highlights potential duplicate identifiers.
+
+- **Automated Excel Reports** – Generates a structured Excel report containing worksheet summaries, column profiles, missing values, duplicate IDs, business key duplicates, and quality issues.
+
+- **Source File Protection** – Performs analysis without modifying the original workbook.
 
 ## Technologies Used
 
